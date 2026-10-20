@@ -7,13 +7,23 @@ import (
 )
 
 type Shell struct {
+	root   *Node
 	cwd    string
 	out    io.Writer
 	exited bool
 }
 
 func New(out io.Writer) *Shell {
-	return &Shell{cwd: "~", out: out}
+	return &Shell{root: NewDir(""), cwd: "~", out: out}
+}
+
+func (s *Shell) MountVFS(dir string) error {
+	root, err := LoadVFS(dir)
+	if err != nil {
+		return err
+	}
+	s.root = root
+	return nil
 }
 
 func (s *Shell) Exited() bool {

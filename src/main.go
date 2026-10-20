@@ -15,6 +15,13 @@ func main() {
 	printConfig(*vfsPath, *scriptPath)
 
 	sh := shell.New(os.Stdout)
+	if *vfsPath != "" {
+		if err := sh.MountVFS(*vfsPath); err != nil {
+			fmt.Println("ошибка загрузки VFS:", err)
+			os.Exit(1)
+		}
+		fmt.Println("[debug] VFS загружена из", *vfsPath)
+	}
 	if *scriptPath != "" {
 		if err := sh.RunScript(*scriptPath); err != nil {
 			fmt.Println("ошибка стартового скрипта:", err)
